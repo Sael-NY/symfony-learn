@@ -1,0 +1,16 @@
+* {
+    box-sizing: border-box;
+}
+
+.articles-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.article-container {
+    width: 33.33%;
+    background-color: lightgray;
+    text-align: center;
+    border: 1px solid gray;
+}

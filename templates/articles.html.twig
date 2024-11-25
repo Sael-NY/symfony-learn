@@ -8,11 +8,18 @@
     <title>Document</title>
 </head>
 <body>
+
+<section class="articles-container">
     {% include "partials/_header.html.twig" %}
     {% for article in articles %}
+        <article class="article-container" >
             <h2>{{ article.title }}</h2>
+        </article>
     {% endfor %}
     {% include "partials/_footer.html.twig" %}
+
+</section>
+
 </main>
 
 </body>
