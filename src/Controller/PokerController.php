@@ -17,7 +17,7 @@ class PokerController {
         //Récupère le donnée GET
         $age = $request->query->get('age');
 
-        $age = 16;
+
 
 if ($age >= 18) {
     echo "Accès autorisé.";
