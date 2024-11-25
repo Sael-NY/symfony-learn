@@ -15,7 +15,7 @@ class ArticleController extends AbstractController {
 
     // je crée une méthode Home et ensuite une Response qui vient du Symfony qui permet de crée une reponse HTTP.
         // Et le HTML qui va avec
-    public function article() {
+    public function articles() {
 
         $articles = [
         [
