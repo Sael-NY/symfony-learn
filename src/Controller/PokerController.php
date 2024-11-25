@@ -2,12 +2,12 @@
 
 namespace App\Controller;
 
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 // Création de classe HomeController
-class PokerController {
+class PokerController extends AbstractController {
 
     #[Route('/poker', 'poker')]
     public function poker () {
@@ -19,11 +19,12 @@ class PokerController {
 
 
 
-if ($age >= 18) {
-    echo "Accès autorisé.";
-} else {
-    echo "Accès refusé. Vous devez avoir au moins 18 ans.";
-};
+
+        if($age >= 18) {
+            return $this->render('poker.html.twig');
+        } else {
+            return $this->render('pokererror.html.twig');
+        }
         var_dump($age); die;
 
 
