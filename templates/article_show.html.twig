@@ -1,6 +1,7 @@
-{% include "partials/_header.html.twig" %}
+{% extends "base.html.twig" %}
+{% block megatitle %} Voir un article{% endblock megatitle %}
 
-
+{%block main %}
 <section class="articles-container">
 
     <article class="article-container" >
@@ -8,6 +9,6 @@
     </article>
 
 </section>
+{%endblock main %}
 
 
-{% include "partials/_footer.html.twig" %}

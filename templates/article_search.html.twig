@@ -1,6 +1,11 @@
-{% include "partials/_header.html.twig" %}
+{% extends "base.html.twig" %}
+    {% block megatitle %} Détail un article {% endblock megatitle %}
+
+
+
+
+{%block main %}
 
 <h1>Résultat de recherche pour "{{ search }}" :</h1>
 
-
-{% include "partials/_footer.html.twig" %}
+{%endblock main %}
