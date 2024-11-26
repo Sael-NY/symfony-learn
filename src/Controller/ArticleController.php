@@ -55,15 +55,12 @@ class ArticleController extends AbstractController {
     return $this -> render('articles.html.twig', ['articles' => $articles]);
 }
 
-    #[Route('/articles', 'article_show')]
-    public function showArticle()
+//Je crée une URL avec un {id} qui marche avec "/article/..."
+    #[Route('/article/{id}', 'article_show')]
+    // je passe en paramétre de la méthode $id , et en symfony s'occupe du stockage de l'id et la
+    // mise en page de l'url
+    public function showArticle($id)
     {
-        // Instance request via le Symfony qui contient la méthode statique et
-        // ça permet de récupérer les données HTTP
-        $request = Request::createFromGlobals();
-        // Récuperer les données 'id' de GET
-        $id = $request -> get('id');
-
         $articles = [
             [
                 'id' => 1,
@@ -103,12 +100,12 @@ class ArticleController extends AbstractController {
 
 // Chaque article on lui donne un id pour enfin les retrouver et je stocke dans ma variable
     foreach ($articles as $article) {
-    if ($article['id'] === (int)$id) {
-        $articleFound = $article;
-    }
-
-    }
-    // Je crée une reponse HTTP via le twig, render du parent AbstractController qui prend un fichier twig
+        if ($article['id'] === (int)$id) {
+            $articleFound = $article;
+            }
+        }
+    dump($articleFound);
+    // Je crée une réponse HTTP via le twig, render du parent AbstractController qui prend un fichier twig
     return $this -> render('article_show.html.twig',
         // C'est un tableau qui contient les variables articles (twig)
         ['article' => $articleFound]);
