@@ -111,14 +111,15 @@ class ArticleController extends AbstractController
             // C'est un tableau qui contient les variables articles (twig)
             ['article' => $articleFound]);
     }
-    #[Route('/articles/search-results', 'article_search_results')]
+    #[Route('/articles/search-results', 'article_search')]
     // Pas besoin d'instancier manuellement un $request, je peux faire via Symfony pour que ça soit
     // automatiquement pour stocker la varibale derrière une classe voulue.
     // Ce mécanisme est appelé autowire
     public function searchArticle(Request $request)
     {
         $search = $request->query->get('search');
-        dump($search);
-        die;
+        return $this->render('article_search.html.twig', [
+            'search' => $search
+        ]);
     }
 }
