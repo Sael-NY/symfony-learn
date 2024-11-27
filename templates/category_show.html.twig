@@ -1,0 +1,13 @@
+{% extends "base.html.twig" %}
+{% block megatitle %} Voir une categorie{% endblock megatitle %}
+
+{%block main %}
+    <section class="articles-container">
+
+        <article class="article-container" >
+             <h2>{{ category.title }}</h2>
+            <p>{{ category.color }}</p>
+        </article>
+
+    </section>
+{%endblock main %}

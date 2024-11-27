@@ -1,0 +1,18 @@
+{% extends "base.html.twig" %}
+    {% block megatitle %} Catégories {% endblock megatitle %}
+
+
+
+
+    {% block main %}
+
+        {% for category in categorys %}
+            <article class="article-container" >
+                <h2>{{ category.title }}</h2>
+                <a href="{{ path("category_show", {id: category.id}) }}">Voir les détails</a>
+                <h3>Il y a {{category | length}} catégories actuellement </h3>
+            </article>
+        {% endfor %}
+
+    {% endblock main %}
+
