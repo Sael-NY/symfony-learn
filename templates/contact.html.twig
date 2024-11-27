@@ -1,0 +1,17 @@
+{% extends "base.html.twig" %}
+    {% block megatitle %} Contact {% endblock megatitle %}
+
+
+ {% block main %}
+
+    <form method="post" action="{{ path('contact') }}">
+        <input type="text">Name
+        <input type="text">Message
+        <input type="submit">
+    </form>
+
+     {% if messageEnv %}
+         <p>{{ messageEnv }}</p>
+     {% endif %}
+
+ {% endblock main %}
