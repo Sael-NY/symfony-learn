@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Category;
+use App\Repository\ArticleRepository;
 use App\Repository\CategoryRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -67,5 +68,24 @@ class CategoryController extends AbstractController
             ['category' => $category]);
     }
 
+    #[Route('/category/delete/{id}', 'delete_category', ['id' => '\d+'])]
+    // je crée une méthode Delete, et symfony prend en charge de supprimer l'article en question, et d'affichez une réponse HTML
+        // comme quoi c'est supprimée.
+    public function deleteCategory(int $id, EntityManagerInterface $entityManager, CategoryRepository $categoryRepository): Response
+    {
+        // On utilise la variable pour stocker les articles et on choisit lequel qu'on vouldra supprimer.
+        $category = $categoryRepository->find($id);
+        // Si on raffraichit 2 fois ou plus, ça redirige 'not_found' comme quoi c'est bien supprimé.
+        if (!$category) {
+            return $this->redirectToRoute('not_found');
+        }
+
+        // On supprime l'article
+        $entityManager->remove($category);
+        // Et on passe dans une requete SQL
+        $entityManager->flush();
+        return $this->render('category_delete.html.twig',
+            ['category' => $category]);
+    }
 
 }

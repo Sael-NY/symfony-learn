@@ -6,7 +6,6 @@ use App\Entity\Article;
 use App\Repository\ArticleRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -92,8 +91,35 @@ class ArticleController extends AbstractController
         $entityManager->remove($article);
         // Et on passe dans une requete SQL
         $entityManager->flush();
-
-        return new Response('Supprimé jeune !');
+    return $this->render('article_delete.html.twig',
+        ['article' => $article]);
     }
+
+    // Le # est lu par PHP (commentaire like)
+#[Route('/article/update/{id}', 'update_article', ['id' => '\d+'])]
+// Encore une fois on crée un updateArticle, et symfony prend en charge de modifier l'article en
+    // question, et d'afficher une reponse HTML comme quoi c'est modifié.
+    public function updateArticle(int $id, EntityManagerInterface $entityManager, ArticleRepository $articleRepository): Response
+
+    {
+        // On récupère la variable qui stock tout articles et on modifie un article chacun si on veut.
+        $article = $articleRepository->find($id);
+
+        // On modifie les entités
+        $article->SetTitle('Mleh');
+        $article->SetContent('Bravo sahbi');
+
+        // On fait une MAJ
+        $entityManager->persist($article);
+        // Et ensuite on passe une requete SQL
+        $entityManager->flush();
+
+        return $this->render('article_update.html.twig', [
+            'article' => $article
+        ]);
+    }
+
+
+
 }
 
