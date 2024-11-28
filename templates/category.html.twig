@@ -7,7 +7,7 @@
     {% block main %}
 
         {% for category in categorys %}
-            <article class="article-container" >
+            <article class="article-container" style="background-color: {{ category.color }}">
                 <h2>{{ category.title }}</h2>
                 <a href="{{ path("category_show", {id: category.id}) }}">Voir les détails</a>
                 <h3>Il y a {{category | length}} catégories actuellement </h3>

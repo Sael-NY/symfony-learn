@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Article;
 use App\Repository\ArticleRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -51,6 +53,28 @@ class ArticleController extends AbstractController
         return $this->render('article_search.html.twig', [
             'search' => $search
         ]);
+    }
+    #[Route('/article/create', 'create_article')]
+    public function createArticle(EntityManagerInterface $entityManager): Response
+    {
+        // Je crée un article dans une entité
+        $article = new Article();
+        // Je crée set + les méthodes pour remplir les propriétés
+        $article->SetTitle('Title');
+        $article->SetContent('Content');
+        $article->setImage('image.jpg');
+        $article->setCreatedAt(new \DateTime());
+
+        // EntityManager sert a sauvegarder et supprimer les entités.
+        // EntityManager et Doctrine sont liés et savent que l'entité 'article' elle est stockée dans la BDD
+        // grâce aux annotations et donc l'entityManager sauvegarde l'entité.
+        $entityManager->persist($article);
+
+        // flush c'est comme un commit dans git, ça sert à executer une requete dans la BDD.
+        $entityManager->flush();
+
+
+        return new Response('Bonjour');
     }
 
 }

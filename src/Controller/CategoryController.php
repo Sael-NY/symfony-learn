@@ -18,7 +18,7 @@ class CategoryController extends AbstractController
     // Une url '/category' est lu par le router
     #[Route('/category', 'category_list')]
     // je crée une méthode Category..
-    // Repository est le mot clé pour aller chercher dans une base de données.
+    // Repository est une classe qui permet d'aller chercher dans une base de données.
     public function categorys(CategoryRepository $categoryRepository): Response
     {
     // Prend toutes la table category dans la base de données pour en faire une variable.
