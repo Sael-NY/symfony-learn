@@ -64,12 +64,12 @@ class CategoryController extends AbstractController
         $entityManager->flush();
 
         return $this->render('category_create.html.twig',
-            // C'est un tableau qui contient les variables articles (twig)
+            // C'est un tableau qui contient les variables category (twig)
             ['category' => $category]);
     }
 
     #[Route('/category/delete/{id}', 'delete_category', ['id' => '\d+'])]
-    // je crée une méthode Delete, et symfony prend en charge de supprimer l'article en question, et d'affichez une réponse HTML
+    // je crée une méthode Delete, et symfony prend en charge de supprimer category en question, et d'affichez une réponse HTML
         // comme quoi c'est supprimée.
     public function deleteCategory(int $id, EntityManagerInterface $entityManager, CategoryRepository $categoryRepository): Response
     {
@@ -80,7 +80,7 @@ class CategoryController extends AbstractController
             return $this->redirectToRoute('not_found');
         }
 
-        // On supprime l'article
+        // On supprime category
         $entityManager->remove($category);
         // Et on passe dans une requete SQL
         $entityManager->flush();
@@ -89,11 +89,11 @@ class CategoryController extends AbstractController
     }
     // Le # est lu par PHP (commentaire like)
 #[Route('/category/update/{id}', 'update_category', ['id' => '\d+'])]
-// Encore une fois on crée un updateArticle, et symfony prend en charge de modifier l'article en
+// Encore une fois on crée un updateArticle, et symfony prend en charge de modifier un category en
         // question, et d'afficher une reponse HTML comme quoi c'est modifié.
     public function updateCategory(int $id, EntityManagerInterface $entityManager, CategoryRepository $categoryRepository): Response
     {
-        // On récupère la variable qui stock tout articles et on modifie un article chacun si on veut.
+        // On récupère la variable qui stock tout catalogues et on modifie un category chacun si on veut.
         $category = $categoryRepository->find($id);
 
         // On modifie les entités
