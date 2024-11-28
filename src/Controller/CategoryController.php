@@ -46,14 +46,24 @@ class CategoryController extends AbstractController
             ['category' => $categorys]);
     }
 
+    // Le # est lu par PHP (commentaire like)
+    // Une url '/' est lu par le router
     #[Route('/category/create', 'create_category')]
-    public function createCategory(EntityManagerInterface $entityManager): Response
+    // je crée une méthode Create, et symfony prend en charge de créer l'article en question, et d'affichez une réponse HTML
+        // comme quoi c'est créé.
+    public function createCategory(Request $request, EntityManagerInterface $entityManager): Response
     {
-        // J'utilise un entité pour crée une catégorie.
+        if ($request->isMethod('POST')) {
+            // Récupérer le paramètre "title"
+            $title = $request->request->get('title');
+            // Récupérer le champ "color"
+            $color = $request->request->get('color');
+
+            // J'utilise un entité pour crée une catégorie.
         $category = new Category();
         // J'utilse set + les méthodes pour remplir les propriétés
-        $category->SetTitle('Arbre');
-        $category->SetColor('Marron');
+        $category->SetTitle($title);
+        $category->SetColor($color);
 
         // EntityManager sert a sauvegarder et supprimer les entités.
         // EntityManager et Doctrine sont liés et savent que l'entité 'catégorie' elle est stockée dans la BDD
@@ -63,9 +73,11 @@ class CategoryController extends AbstractController
         // flush c'est comme un commit dans git, ça sert à executer une requete dans la BDD.
         $entityManager->flush();
 
+        return $this->redirectToRoute('category_list');
+    }
         return $this->render('category_create.html.twig',
             // C'est un tableau qui contient les variables category (twig)
-            ['category' => $category]);
+            []);
     }
 
     #[Route('/category/delete/{id}', 'delete_category', ['id' => '\d+'])]
@@ -106,7 +118,7 @@ class CategoryController extends AbstractController
         $entityManager->flush();
 
         return $this->render('category_update.html.twig', [
-            'category' => $category
+            'category' => $category,
         ]);
     }
 }

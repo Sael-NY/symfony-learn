@@ -5,6 +5,16 @@
 
 
     {% block main %}
-        <h2>Vous avez créée {{ category.title }}</h2>
+        <form method="POST">
+
+            <label for="title">Titre</label>
+            <input type="text" id="titre" name="title" placeholder="Titre">
+
+            <label for="color">Color</label>
+            <input id="color" name="color" placeholder="Color">
+
+            <button type="submit">Créé</button>
+
+        </form>
 
     {% endblock main %}

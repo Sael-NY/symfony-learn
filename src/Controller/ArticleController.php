@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-// Création de classe HomeController
+// Création de classe ArticleController
 class ArticleController extends AbstractController
 {
 
@@ -54,25 +54,44 @@ class ArticleController extends AbstractController
         ]);
     }
     #[Route('/article/create', 'create_article')]
-    public function createArticle(EntityManagerInterface $entityManager): Response
+    // je crée une méthode Create, et symfony prend en charge de créer l'article en question, et d'affichez une réponse HTML
+        // comme quoi c'est supprimée.
+    public function createArticle(Request $request,EntityManagerInterface $entityManager): Response
     {
-        // J'utilise un entité pour crée un article.
-        $article = new Article();
-        // J'utilse set + les méthodes pour remplir les propriétés
-        $article->SetTitle('Title');
-        $article->SetContent('Content');
-        $article->setImage('image.jpg');
-        $article->setCreatedAt(new \DateTime());
+        // Vérifier si la requête est en POST
+        if ($request->isMethod('POST')) {
+            // Récupérer le paramètre "title"
+            $title = $request->request->get('title');
+            // Récupérer le champ "content"
+            $content = $request->request->get('content');
+            // Récupérer le champ "image"
+            $image = $request->request->get('image');
 
-        // EntityManager sert a sauvegarder et supprimer les entités.
-        // EntityManager et Doctrine sont liés et savent que l'entité 'article' elle est stockée dans la BDD
-        // grâce aux annotations et donc l'entityManager sauvegarde l'entité.
-        $entityManager->persist($article);
 
-        // flush c'est comme un commit dans git, ça sert à executer une requete dans la BDD.
-        $entityManager->flush();
+            $article = new Article();
 
-        return new Response('Bonjour');
+            // Avoir un titre qui est dans le form
+            $article->setTitle($title);
+            // Définit le contenu de l'article
+            $article->setContent($content);
+            // Avoir une image dans l'article
+            $article->setImage($image);
+            // Attribue la date de l'article
+            $article->setCreatedAt(new \DateTime());
+
+            // EntityManager sert a sauvegarder et supprimer les entités.
+            // EntityManager et Doctrine sont liés et savent que l'entité 'catégorie' elle est stockée dans la BDD
+            // grâce aux annotations et donc l'entityManager sauvegarde l'entité.
+            $entityManager->persist($article);
+            // On passe au requete SQL comme un commit dans github
+            $entityManager->flush();
+
+            return $this->redirectToRoute('articles_list');
+
+        }
+
+        return $this -> render('article_create.html.twig', [
+        ]);
     }
     // Le # est lu par PHP (commentaire like)
     #[Route('/article/delete/{id}', 'delete_article', ['id' => '\d+'])]
