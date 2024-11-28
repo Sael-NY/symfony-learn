@@ -57,9 +57,9 @@ class ArticleController extends AbstractController
     #[Route('/article/create', 'create_article')]
     public function createArticle(EntityManagerInterface $entityManager): Response
     {
-        // Je crée un article dans une entité
+        // J'utilise un entité pour crée un article.
         $article = new Article();
-        // Je crée set + les méthodes pour remplir les propriétés
+        // J'utilse set + les méthodes pour remplir les propriétés
         $article->SetTitle('Title');
         $article->SetContent('Content');
         $article->setImage('image.jpg');
@@ -72,7 +72,6 @@ class ArticleController extends AbstractController
 
         // flush c'est comme un commit dans git, ça sert à executer une requete dans la BDD.
         $entityManager->flush();
-
 
         return new Response('Bonjour');
     }
