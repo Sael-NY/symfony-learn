@@ -87,5 +87,26 @@ class CategoryController extends AbstractController
         return $this->render('category_delete.html.twig',
             ['category' => $category]);
     }
+    // Le # est lu par PHP (commentaire like)
+#[Route('/category/update/{id}', 'update_category', ['id' => '\d+'])]
+// Encore une fois on crée un updateArticle, et symfony prend en charge de modifier l'article en
+        // question, et d'afficher une reponse HTML comme quoi c'est modifié.
+    public function updateCategory(int $id, EntityManagerInterface $entityManager, CategoryRepository $categoryRepository): Response
+    {
+        // On récupère la variable qui stock tout articles et on modifie un article chacun si on veut.
+        $category = $categoryRepository->find($id);
 
+        // On modifie les entités
+        $category->SetTitle('DICTATURE !');
+        $category->SetColor('Orange');
+
+        // On fait une MAJ
+        $entityManager->persist($category);
+        // Et ensuite on passe une requete SQL
+        $entityManager->flush();
+
+        return $this->render('category_update.html.twig', [
+            'category' => $category
+        ]);
+    }
 }
