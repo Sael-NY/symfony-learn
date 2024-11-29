@@ -6,21 +6,8 @@
 
 {%block main %}
 
-    <p>{{ message }}</p>
-
-    <form method="post" action="{{ path('update_category', {id: category.id}) }}">
-
-        <label>Titre
-            <input name="title" type="text" value="{{ category.title }}" required/>
-        </label>
-
-        <label>Image
-            <input name="color" type="text" value="{{ category.color }}"/>
-        </label>
-
-        <input type="submit">
+    {{ form(formView) }}
 
 
-    </form>
 
 {%endblock main %}
