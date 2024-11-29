@@ -103,22 +103,37 @@ class CategoryController extends AbstractController
 #[Route('/category/update/{id}', 'update_category', ['id' => '\d+'])]
 // Encore une fois on crée un updateArticle, et symfony prend en charge de modifier un category en
         // question, et d'afficher une reponse HTML comme quoi c'est modifié.
-    public function updateCategory(int $id, EntityManagerInterface $entityManager, CategoryRepository $categoryRepository): Response
+    public function updateCategory(int $id,CategoryRepository $categoryRepository, EntityManagerInterface $entityManager, Request $request): Response
     {
-        // On récupère la variable qui stock tout catalogues et on modifie un category chacun si on veut.
         $category = $categoryRepository->find($id);
+        $message = null;
 
-        // On modifie les entités
-        $category->SetTitle('DICTATURE !');
-        $category->SetColor('Orange');
+        // Vérifier si la requête est en POST
+        if ($request->isMethod('POST')) {
+            // Récupérer le paramètre "title"
+            $title = $request->request->get('title');
+            // Récupérer le champ "content"
+            $color = $request->request->get('color');
 
-        // On fait une MAJ
-        $entityManager->persist($category);
-        // Et ensuite on passe une requete SQL
-        $entityManager->flush();
+            // Avoir un titre qui est dans le form
+            $category->setTitle($title);
+            // Définit le contenu de l'article
+            $category->setColor($color);
+
+            // EntityManager sert a sauvegarder et supprimer les entités.
+            // EntityManager et Doctrine sont liés et savent que l'entité 'catégorie' elle est stockée dans la BDD
+            // grâce aux annotations et donc l'entityManager sauvegarde l'entité.
+            $entityManager->persist($category);
+            // On passe au requete SQL comme un commit dans github
+            $entityManager->flush();
+
+            $message = "La catégorie '" . $category->getTitle() . "' a bien été mis à jour";
+
+        }
 
         return $this->render('category_update.html.twig', [
             'category' => $category,
+            'message' => $message
         ]);
     }
 }
