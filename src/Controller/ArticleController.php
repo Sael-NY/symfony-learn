@@ -69,7 +69,7 @@ class ArticleController extends AbstractController
         // Et j'affiche en view pour le côté client
         $formView = $form->createView();
 
-// Vérification de données envoyées
+        // Vérification de données envoyées
         if ($form -> isSubmitted()) {
             // Création de la date une fois que c'est créé
         $article ->setCreatedAt(new \DateTime());

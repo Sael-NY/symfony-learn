@@ -2,8 +2,9 @@
 
 namespace App\Controller;
 
+
 use App\Entity\Category;
-use App\Repository\ArticleRepository;
+use App\Form\CategoryType;
 use App\Repository\CategoryRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -53,32 +54,28 @@ class CategoryController extends AbstractController
         // comme quoi c'est créé.
     public function createCategory(Request $request, EntityManagerInterface $entityManager): Response
     {
-        if ($request->isMethod('POST')) {
-            // Récupérer le paramètre "title"
-            $title = $request->request->get('title');
-            // Récupérer le champ "color"
-            $color = $request->request->get('color');
-
-            // J'utilise un entité pour crée une catégorie.
+        // Créé un article
         $category = new Category();
-        // J'utilse set + les méthodes pour remplir les propriétés
-        $category->SetTitle($title);
-        $category->SetColor($color);
+        // On utilise un variable qui contient la classe createForm qui vient d'AbstractController
+        // et qui gère une form du côté HTML.
+        $form = $this->createForm(CategoryType::class, $category);
+        // il gère le côté HTTP et de demander à chaque enregistrement et de remplir à chaque input et stocker (title,content...)
+        $form -> handleRequest($request);
+        // Et j'affiche en view pour le côté client
+        $formView = $form->createView();
 
-        // EntityManager sert a sauvegarder et supprimer les entités.
-        // EntityManager et Doctrine sont liés et savent que l'entité 'catégorie' elle est stockée dans la BDD
-        // grâce aux annotations et donc l'entityManager sauvegarde l'entité.
-        $entityManager->persist($category);
-
-        // flush c'est comme un commit dans git, ça sert à executer une requete dans la BDD.
-        $entityManager->flush();
-
-        return $this->redirectToRoute('category_list');
+        // Vérification de données envoyées
+        if ($form -> isSubmitted()) {
+            // On sauvegarde tout ça
+            $entityManager->persist($category);
+            // Et on passe dans une requete SQL
+            $entityManager->flush();
+        }
+        return $this -> render('category_create.html.twig', [
+            'formView' => $formView,
+        ]);
     }
-        return $this->render('category_create.html.twig',
-            // C'est un tableau qui contient les variables category (twig)
-            []);
-    }
+
 
     #[Route('/category/delete/{id}', 'delete_category', ['id' => '\d+'])]
     // je crée une méthode Delete, et symfony prend en charge de supprimer category en question, et d'affichez une réponse HTML
