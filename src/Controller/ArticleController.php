@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Article;
+use App\Form\ArticleType;
 use App\Repository\ArticleRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -58,39 +59,20 @@ class ArticleController extends AbstractController
         // comme quoi c'est supprimée.
     public function createArticle(Request $request,EntityManagerInterface $entityManager): Response
     {
-        // Vérifier si la requête est en POST
-        if ($request->isMethod('POST')) {
-            // Récupérer le paramètre "title"
-            $title = $request->request->get('title');
-            // Récupérer le champ "content"
-            $content = $request->request->get('content');
-            // Récupérer le champ "image"
-            $image = $request->request->get('image');
+
+        // Créé un nouvel article !
+        $article = new Article();
+
+        // Utilise la variable pour contenir createForm qui est généré par Symfony et qui gère une form du côté HTML.
+        $form = $this->createForm(ArticleType::class, $article);
+        // Et j'affiche en view pour le côté client
+        $formView = $form->createView();
 
 
-            $article = new Article();
 
-            // Avoir un titre qui est dans le form
-            $article->setTitle($title);
-            // Définit le contenu de l'article
-            $article->setContent($content);
-            // Avoir une image dans l'article
-            $article->setImage($image);
-            // Attribue la date de l'article
-            $article->setCreatedAt(new \DateTime());
-
-            // EntityManager sert a sauvegarder et supprimer les entités.
-            // EntityManager et Doctrine sont liés et savent que l'entité 'catégorie' elle est stockée dans la BDD
-            // grâce aux annotations et donc l'entityManager sauvegarde l'entité.
-            $entityManager->persist($article);
-            // On passe au requete SQL comme un commit dans github
-            $entityManager->flush();
-
-            return $this->redirectToRoute('articles_list');
-
-        }
 
         return $this -> render('article_create.html.twig', [
+            'formView' => $formView,
         ]);
     }
     // Le # est lu par PHP (commentaire like)

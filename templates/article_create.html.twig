@@ -4,19 +4,6 @@
 
  {% block main %}
 
-     <form method="POST">
-
-         <label for="title">Titre</label>
-         <input type="text" id="titre" name="title" placeholder="Titre">
-
-         <label for="content">Contenu</label>
-         <input id="content" name="content" placeholder="Contenu">
-
-         <label for="image">Image</label>
-         <input type="text" id="image" name="image" placeholder="Image">
-
-         <button type="submit">Créé</button>
-
-     </form>
+     {{ form(formView) }}
 
  {% endblock main %}
