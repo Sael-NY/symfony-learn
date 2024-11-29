@@ -59,16 +59,25 @@ class ArticleController extends AbstractController
         // comme quoi c'est supprimée.
     public function createArticle(Request $request,EntityManagerInterface $entityManager): Response
     {
-
-        // Créé un nouvel article !
+    // Créé un article
         $article = new Article();
-
-        // Utilise la variable pour contenir createForm qui est généré par Symfony et qui gère une form du côté HTML.
+        // On utilise un variable qui contient la classe createForm qui vient d'AbstractController
+        // et qui gère une form du côté HTML.
         $form = $this->createForm(ArticleType::class, $article);
+        // il gère le côté HTTP et de demander à chaque enregistrement et de remplir à chaque input et stocker (title,content...)
+        $form -> handleRequest($request);
         // Et j'affiche en view pour le côté client
         $formView = $form->createView();
 
-
+// Vérification de données envoyées
+        if ($form -> isSubmitted()) {
+            // Création de la date une fois que c'est créé
+        $article ->setCreatedAt(new \DateTime());
+        // On sauvegarde tout ça
+        $entityManager->persist($article);
+            // Et on passe dans une requete SQL
+        $entityManager->flush();
+    }
 
 
         return $this -> render('article_create.html.twig', [
