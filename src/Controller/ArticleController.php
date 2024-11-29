@@ -118,25 +118,46 @@ class ArticleController extends AbstractController
 #[Route('/article/update/{id}', 'update_article', ['id' => '\d+'])]
 // Encore une fois on crée un updateArticle, et symfony prend en charge de modifier l'article en
     // question, et d'afficher une reponse HTML comme quoi c'est modifié.
-    public function updateArticle(int $id, EntityManagerInterface $entityManager, ArticleRepository $articleRepository): Response
-
+    public function updateArticle(int $id, EntityManagerInterface $entityManager, ArticleRepository $articleRepository, Request $request): Response
     {
-        // On récupère la variable qui stock tout articles et on modifie un article chacun si on veut.
         $article = $articleRepository->find($id);
+        $message = null;
 
-        // On modifie les entités
-        $article->SetTitle('Mleh');
-        $article->SetContent('Bravo sahbi');
+        // Vérifier si la requête est en POST
+        if ($request->isMethod('POST')) {
+            // Récupérer le paramètre "title"
+            $title = $request->request->get('title');
+            // Récupérer le champ "content"
+            $content = $request->request->get('content');
+            // Récupérer le champ "image"
+            $image = $request->request->get('image');
 
-        // On fait une MAJ
-        $entityManager->persist($article);
-        // Et ensuite on passe une requete SQL
-        $entityManager->flush();
 
-        return $this->render('article_update.html.twig', [
-            'article' => $article
+            // Avoir un titre qui est dans le form
+            $article->setTitle($title);
+            // Définit le contenu de l'article
+            $article->setContent($content);
+            // Avoir une image dans l'article
+            $article->setImage($image);
+
+
+            // EntityManager sert a sauvegarder et supprimer les entités.
+            // EntityManager et Doctrine sont liés et savent que l'entité 'catégorie' elle est stockée dans la BDD
+            // grâce aux annotations et donc l'entityManager sauvegarde l'entité.
+            $entityManager->persist($article);
+            // On passe au requete SQL comme un commit dans github
+            $entityManager->flush();
+
+            $message = "L'article '" . $article->getTitle() . "' a bien été mis à jour";
+
+        }
+
+        return $this -> render('article_update.html.twig', [
+            'article' => $article,
+            'message' => $message
         ]);
     }
+
 
 
 

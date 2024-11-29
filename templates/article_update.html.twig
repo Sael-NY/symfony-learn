@@ -6,6 +6,25 @@
 
 {% block main %}
 
-    <h1>Vous avez modifié avec succés ! </h1>
+    <p>{{ message }}</p>
+
+    <form method="post" action="{{ path('update_article', {id: article.id}) }}">
+
+        <label>Titre
+            <input name="title" type="text" value="{{ article.title }}" required/>
+        </label>
+
+        <label>Contenu
+            <textarea name="content" required>{{ article.content }}</textarea>
+        </label>
+
+        <label>Image
+            <input name="image" type="text" value="{{ article.image }}"/>
+        </label>
+
+        <input type="submit">
+
+
+    </form>
 
 {% endblock main %}
