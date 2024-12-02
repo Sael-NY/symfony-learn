@@ -4,6 +4,18 @@
 
  {% block main %}
 
-     {{ form(formView) }}
+     <section>
+         <h1>Créer un nouvel article</h1>
+
+         <div>
+
+                     {{ form_start(formView, {'attr': {'class': 'needs-validation'}}) }}
+
+                     {{ form_widget(formView, {'attr': {'class': 'form-control'}}) }}
+
+                     {{ form_end(formView) }}
+
+         </div>
+     </section>
 
  {% endblock main %}

@@ -5,6 +5,7 @@ namespace App\Controller;
 
 use App\Entity\Category;
 use App\Form\CategoryType;
+use App\Repository\ArticleRepository;
 use App\Repository\CategoryRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -39,12 +40,14 @@ class CategoryController extends AbstractController
     {
         // Prend toutes la table category dans la BDD et pour en piocher un article si on veut.
         $categorys = $categoryRepository->find($id);
+        $articles = $categorys->getArticles();
 
 
         // Je crée une réponse HTTP via le twig, render du parent AbstractController qui prend un fichier twig
         return $this->render('category_show.html.twig',
             // C'est un tableau qui contient les variables articles (twig)
-            ['category' => $categorys]);
+            ['category' => $categorys
+            , 'articles' => $articles]);
     }
 
     // Le # est lu par PHP (commentaire like)
@@ -103,14 +106,18 @@ class CategoryController extends AbstractController
     public function updateCategory(int $id,CategoryRepository $categoryRepository, EntityManagerInterface $entityManager, Request $request): Response
     {
         $category = $categoryRepository->find($id);
+        // On utilise un variable qui contient la classe createForm qui vient d'AbstractController
+        // et qui gère une form du côté HTML.
         $form = $this->createForm(CategoryType::class, $category);
+        // il gère le côté HTTP et de demander à chaque enregistrement et de remplir à chaque input et stocker (title,content...)
         $form -> handleRequest($request);
+        // Et j'affiche en view pour le côté client
         $formView = $form->createView();
 
 
         // Vérifier si la requête est en POST
         if ($request->isMethod('POST')) {
-            // Récupérer le paramètre "title"
+            // Sauvegarde tout les params
             $entityManager->persist($category);
             // On passe au requete SQL comme un commit dans github
             $entityManager->flush();
@@ -121,4 +128,5 @@ class CategoryController extends AbstractController
             'formView' => $formView,
         ]);
     }
+
 }

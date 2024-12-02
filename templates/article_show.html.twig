@@ -7,6 +7,7 @@
     <article class="article-container" >
         <h2>{{ article.title }}</h2>
         <p> Date de création : {{ article.createdAt | date('d/m/y h:i:s') }}</p>
+        {{ form(formView) }}
     </article>
 
 </section>

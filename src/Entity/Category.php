@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\CategoryRepository;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
@@ -19,6 +20,8 @@ class Category
     #[ORM\Column(length: 255)]
     private ?string $color = null;
 
+    #[ORM\OneToMany(mappedBy: 'category', targetEntity: Article::class)]
+    private Collection $articles;
     public function getId(): ?int
     {
         return $this->id;
@@ -47,4 +50,9 @@ class Category
 
         return $this;
     }
+    public function getArticles(): Collection
+    {
+    return $this -> articles;
+    }
 }
+

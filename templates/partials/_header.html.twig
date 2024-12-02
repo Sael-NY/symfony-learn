@@ -19,10 +19,10 @@
     <li><a href="{{ path('articles_list') }}">Articles</a></li>
     <li><a href="{{ path('category_list') }}">Catégories</a></li>
     <li><a href="{{ path('create_article') }}">Article création</a></li>
-    <li><a href="{{ path('create_category') }}">Catégories création</a></li>
+    <li><a href="{{ path('create_category') }}">Catégorie création</a></li>
 
 
-    <form method="get" action="{{ path('article_search')}}">
+    <form method="get" action="{{ path('search_results')}}">
 
         <input type="text" name="search">
         <input type="submit">

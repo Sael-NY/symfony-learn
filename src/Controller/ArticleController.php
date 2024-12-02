@@ -3,8 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Article;
+use App\Entity\Category;
+use App\Entity\Comment;
 use App\Form\ArticleType;
+use App\Form\CategoryType;
 use App\Repository\ArticleRepository;
+use App\Repository\CategoryRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,26 +36,46 @@ class ArticleController extends AbstractController
     #[Route('/articles/{id}', 'article_show', ['id' => '\d+'])]
     // je passe en paramétre de la méthode $id , et en symfony s'occupe du stockage de l'id et la
         // mise en page de l'url
-    public function showArticle($id, ArticleRepository $articleRepository) : Response
+    public function showArticle($id, Request $request,ArticleRepository $articleRepository) : Response
     {
         $articles = $articleRepository->find($id);
 
+        // ajouter le formulaire et le passer à la vue
+        // Créé un article
+        $comment = new Comment();
+        // On utilise un variable qui contient la classe createForm qui vient d'AbstractController
+        // et qui gère une form du côté HTML.
+        $form = $this->createForm(ArticleType::class, $articles);
+        // il gère le côté HTTP et de demander à chaque enregistrement et de remplir à chaque input et stocker (title,content...)
+        $form -> handleRequest($request);
+        // Et j'affiche en view pour le côté client
+        $formView = $form->createView();
 
         // Je crée une réponse HTTP via le twig, render du parent AbstractController qui prend un fichier twig
         return $this->render('article_show.html.twig',
             // C'est un tableau qui contient les variables articles (twig)
-            ['article' => $articles]);
+            ['article' => $articles
+            , 'comment' => $comment
+            , 'formView' => $formView]);
     }
-    #[Route('/articles/search-results', 'article_search')]
+    #[Route('/articles/search-results', 'search_results')]
     // Pas besoin d'instancier manuellement un $request, je peux faire via Symfony pour que ça soit
     // automatiquement pour stocker la varibale derrière une classe voulue.
     // Ce mécanisme est appelé autowire
-    public function searchArticle(Request $request): Response
+    public function searchArticle(Request $request, ArticleRepository $articleRepository, CategoryRepository $categoryRepository): Response
     {
 
         $search = $request->query->get('search');
+
+        $articles = $articleRepository->search($search);
+        $categories = $categoryRepository->search($search);
+
+
+
         return $this->render('article_search.html.twig', [
-            'search' => $search
+            'search' => $search,
+            'articles' => $articles,
+            'categories' => $categories,
         ]);
     }
     #[Route('/article/create', 'create_article')]
@@ -59,7 +83,7 @@ class ArticleController extends AbstractController
         // comme quoi c'est supprimée.
     public function createArticle(Request $request,EntityManagerInterface $entityManager): Response
     {
-    // Créé un article
+        // Créé un article
         $article = new Article();
         // On utilise un variable qui contient la classe createForm qui vient d'AbstractController
         // et qui gère une form du côté HTML.
@@ -112,7 +136,6 @@ class ArticleController extends AbstractController
     public function updateArticle(int $id, EntityManagerInterface $entityManager, ArticleRepository $articleRepository, Request $request): Response
     {
         $article = $articleRepository->find($id);
-        $message = null;
 
         // Vérifier si la requête est en POST
         if ($request->isMethod('POST')) {

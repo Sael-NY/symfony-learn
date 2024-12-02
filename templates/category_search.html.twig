@@ -1,0 +1,16 @@
+{% extends "base.html.twig" %}
+
+
+{% block megatitle %} Search category{% endblock megatitle %}
+
+{%block main %}
+
+
+    {% for category in categorys %}
+
+        <h1>Résultat de recherche pour "{{ search }}" :</h1>
+
+    {% endfor %}
+
+
+{%endblock main %}

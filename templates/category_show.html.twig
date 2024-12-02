@@ -2,12 +2,33 @@
 {% block megatitle %} Voir une categorie{% endblock megatitle %}
 
 {%block main %}
-    <section class="articles-container">
+    <section class="container my-5">
+        <!-- Catégorie -->
+        <div class="card mb-4 shadow-sm">
+            <div class="card-body" style="background-color: {{ category.color }}">
+                <h1 class="card-title">{{ category.title }}</h1>
+            </div>
+        </div>
 
-        <article class="article-container" >
-             <h2>{{ category.title }}</h2>
-             <p>{{ category.color }}</p>
-        </article>
+        <!-- Articles dans la catégorie -->
+        <h2 class="mb-4">Articles dans cette catégorie</h2>
 
+        <div class="row">
+            {% for article in articles %}
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <a href="{{ path('article_show', {'id': article.id}) }}" class="text-decoration-none">{{ article.title }}</a>
+                            </h5>
+                            <p class="card-text">{{ article.content|slice(0, 100) ~ '...' }}</p>
+                            <a href="{{ path('article_show', {'id': article.id}) }}" class="btn btn-primary btn-sm">Lire la suite</a>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <p class="text-center text-muted">Aucun article dans cette catégorie.</p>
+            {% endfor %}
+        </div>
     </section>
 {%endblock main %}

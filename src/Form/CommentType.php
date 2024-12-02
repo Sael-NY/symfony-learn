@@ -10,20 +10,12 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ArticleType extends AbstractType
+class CommentType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('title')
-            ->add('content')
-            ->add('image')
-            ->add('category', EntityType::class, [
-                'class' => Category::class,
-                'choice_label' => 'title',
-                'placeholder' => 'Choose a category'
-                ]
-            )
+            ->add('comment')
             ->add('enregistrer',SubmitType::class);
     }
 
